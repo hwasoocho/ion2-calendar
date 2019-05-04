@@ -137,7 +137,7 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
       return false;
     }
 
-    return this._date[1].time === day.time;
+    return this._date[0] !== this._date[1] && this._date[1].time === day.time;
   }
 
   isBetween(day: CalendarDay): boolean {
@@ -163,7 +163,7 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
       return false;
     }
 
-    return this._date[0].time === day.time && this._date[1] !== null;
+    return this._date[0] !== this._date[1] && this._date[0].time === day.time && this._date[1] !== null;
   }
 
   isSelected(time: number): boolean {
@@ -195,23 +195,26 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
     }
 
     if (this.pickMode === pickModes.RANGE) {
-      if (this._date[0] === null) {
+      if (this._date[0] === null && this._date[1] === null) {
         this._date[0] = item;
+        this._date[1] = item;
         this.selectStart.emit(item);
-      } else if (this._date[1] === null) {
+        this.selectEnd.emit(item)
+      } else if (this._date[0] === this._date[1]) {
         if (this._date[0].time < item.time) {
           this._date[1] = item;
           this.selectEnd.emit(item);
         } else {
           this._date[1] = this._date[0];
-          this.selectEnd.emit(this._date[0]);
           this._date[0] = item;
           this.selectStart.emit(item);
+          this.selectEnd.emit(this._date[0]);
         }
       } else {
         this._date[0] = item;
+        this._date[1] = item;
         this.selectStart.emit(item);
-        this._date[1] = null;
+        this.selectEnd.emit(item)
       }
       this.change.emit(this._date);
       return;

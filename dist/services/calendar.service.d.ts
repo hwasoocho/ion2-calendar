@@ -1,6 +1,7 @@
 import { CalendarOriginal, CalendarDay, CalendarMonth, CalendarModalOptions, CalendarResult } from '../calendar.model';
 export declare class CalendarService {
-    constructor();
+    private readonly defaultOpts;
+    constructor(defaultOpts: CalendarModalOptions);
     readonly DEFAULT_STEP: number;
     safeOpt(calendarOptions?: any): CalendarModalOptions;
     createOriginalCalendar(time: number): CalendarOriginal;
